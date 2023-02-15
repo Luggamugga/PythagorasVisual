@@ -1,6 +1,7 @@
 body {
     margin:0;
     height:100%;
+    width:100%;
 }
 input[type=text] {
     font-size: inherit;
@@ -67,4 +68,16 @@ text-align:justify;
 }
 #a,#b{
     float:left;
+}
+#draw{
+    height:100%;
+    width:100%;
+    margin:0;
+}
+#textBox{
+    border: solid 1px black;
+    margin: 10px auto 0;
+    width: 60%;
+    height: 130px;
+    background-color: antiquewhite;
 }
