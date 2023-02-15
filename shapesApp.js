@@ -17,8 +17,7 @@ let values = {
    a: temp1[0].split("=")[1],
     b: temp1[1].split("=")[1]
 }
-console.log(values.a + " " + values.b);
-let submitButt = document.getElementById("submitButt");
+
     let A = values.a*10;
     let B = values.b*10;
     console.log("A: "+A+" B: "+B);
@@ -80,6 +79,7 @@ let circumArr = findCircumCenter(P1,P2,P3);
     stage.add(layer);
     triangle.on("dragmove",()=>{
         console.log(triangle.getX() + " " + triangle.getY());
+        triangle.y(Math.max(triangle.getY(),61))
 
     });
    /* function getCircumCenter(X1,Y1,X2,Y2,X3,Y3){
