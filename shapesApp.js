@@ -1,3 +1,4 @@
+
 let windowHeight = window.innerHeight;
 let windowWidth = window.innerWidth;
 let drawHeight = document.getElementById("draw").clientHeight;
@@ -25,7 +26,7 @@ let B = values.b * 10;
 function TriangleGen(startX,startY,stroke,fill,draggable){
     let P = [startX,startY];
     let Q = [startX+A,startY];
-    let R = [startX+A,startY+A]
+    let R = [startX+A,startY+B]
     let arr = findCircumCenter(P,Q,R);
     let newTri = new Konva.Shape({
         sceneFunc:function(context,shape){
@@ -69,9 +70,10 @@ draggableShapes.on("dragmove", (e) => {
 draggableShapes.on("dblclick",(e)=>{
     e.target.moveToTop();
     e.target.rotate(90);
+    console.log(e.target.getX(), e.target.getY())
+
 })
 draggableShapes.on("click",(e)=>{
-    console.log("asdf");
     e.target.moveToTop();
 })
 

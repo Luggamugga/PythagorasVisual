@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/YuvalIA.iml" filepath="$PROJECT_DIR$/.idea/YuvalIA.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/IAprojectYuval.iml" filepath="$PROJECT_DIR$/.idea/IAprojectYuval.iml" />
+>>>>>>> 591d985 (Rotation func)
     </modules>
   </component>
 </project>
