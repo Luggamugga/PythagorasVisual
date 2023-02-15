@@ -8,9 +8,7 @@ let stage = new Konva.Stage({
 })
 
 let layer = new Konva.Layer();
-let globalLayer = new Konva.Layer({
-    clearBeforeDraw:false,
-});
+
 let tempVal = window.location.href.split("?");
 let temp1 = tempVal[1].split("&");
 let values = {
@@ -80,6 +78,8 @@ let circumArr = findCircumCenter(P1,P2,P3);
     triangle.on("dragmove",()=>{
         console.log(triangle.getX() + " " + triangle.getY());
         triangle.y(Math.max(triangle.getY(),61))
+        triangle.x(Math.max(triangle.getX(),10));
+        triangle.x(Math.min(triangle.getX(),windowWidth))
 
     });
    /* function getCircumCenter(X1,Y1,X2,Y2,X3,Y3){
@@ -99,8 +99,7 @@ let circumArr = findCircumCenter(P1,P2,P3);
 
 
 triangle.on("dblclick",()=>{
-    let prevX = triangle.getX();
-    let prevY = triangle.getY();
+
     triangle.rotate(90);
     console.log(prevX);
     console.log(prevY);
