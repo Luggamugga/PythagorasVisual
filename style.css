@@ -2,6 +2,7 @@ body {
     margin:0;
     height:100%;
     width:100%;
+    overflow: hidden;
 }
 input[type=text] {
     font-size: inherit;
@@ -70,9 +71,9 @@ text-align:justify;
     float:left;
 }
 #draw{
-    height:100%;
-    width:100%;
     margin:0;
+    width:100%;
+    height:100%;
 }
 #textBox{
     border: solid 1px black;
