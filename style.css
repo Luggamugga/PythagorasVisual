@@ -58,7 +58,8 @@ grid-column:span 2;
 .bigHeader{
     text-align: center;
     font-size: 40px;
-    margin: 20px;}
+    margin: 20px;
+}
 .subheading{
 text-align:justify;
     padding:5px;

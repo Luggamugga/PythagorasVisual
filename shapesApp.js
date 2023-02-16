@@ -44,10 +44,8 @@ function TriangleGen(startX,startY,stroke,fill,draggable){
             context.lineTo(startX+A,startY);
             context.lineTo(startX+A,startY+B);
             context.closePath();
-
             context.fillStrokeShape(shape);
         },
-
         fill:fill,
         stroke:stroke,
         strokeWidth:1,
@@ -71,7 +69,7 @@ stage.add(layer);
 
 //limiting drag area:
 draggableShapes.on("dragmove", (e) => {
-    e.target.y(Math.max(e.target.getY(), 61))
+    e.target.y(Math.max(e.target.getY(), 100))
     e.target.x(Math.max(e.target.getX(), 20));
     e.target.x(Math.min(e.target.getX(), windowWidth-50));
     e.target.y(Math.min(e.target.getY(),drawHeight-200));
