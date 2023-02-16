@@ -54,7 +54,7 @@ function TriangleGen(startX,startY,stroke,fill,draggable){
         y:startY,
         offset:{
             x:arr[0],
-            y:arr[1]
+            y:arr[1],
         }
     });
     layer.add(newTri);
@@ -69,16 +69,22 @@ stage.add(layer);
 
 //limiting drag area:
 draggableShapes.on("dragmove", (e) => {
+    e.target.moveToTop();
+
     e.target.y(Math.max(e.target.getY(), 100))
     e.target.x(Math.max(e.target.getX(), 20));
     e.target.x(Math.min(e.target.getX(), windowWidth-50));
-    e.target.y(Math.min(e.target.getY(),drawHeight-200));
+    e.target.y(Math.min(e.target.getY(),drawHeight-150));
 });
 //rotation on dblclick:
 draggableShapes.on("dblclick",(e)=>{
+    e.target.moveToTop();
     e.target.rotate(90);
 })
-
+draggableShapes.on("click",(e)=>{
+    console.log("asdf");
+    e.target.moveToTop();
+})
 
 //TODO: rewrite this code!:
 
