@@ -1,17 +1,11 @@
 let windowHeight = window.innerHeight;
 let windowWidth = window.innerWidth;
 let drawHeight = document.getElementById("draw").clientHeight;
-
-document.addEventListener("DOMContentLoaded",()=>{
-    console.log(windowHeight);
-
-})
 let stage = new Konva.Stage({
     container: "draw",
     width: windowWidth,
     height: drawHeight,
 })
-
 let layer = new Konva.Layer();
 //group for draggableShapes:
 let draggableShapes = new Konva.Group();
@@ -27,10 +21,6 @@ let values = {
 }
 let A = values.a * 10;
 let B = values.b * 10;
-/*let s = (A+B+C)/2;
-let radius = (A*B*C)/(4*Math.sqrt(s*(s-A)*(s-B)*(s-C)))
-*/
-//https://keisan.casio.com/exec/system/1223429573 : Formulae for radius
 
 function TriangleGen(startX,startY,stroke,fill,draggable){
     let P = [startX,startY];
@@ -70,9 +60,8 @@ stage.add(layer);
 //limiting drag area:
 draggableShapes.on("dragmove", (e) => {
     e.target.moveToTop();
-
-    e.target.y(Math.max(e.target.getY(), 100))
-    e.target.x(Math.max(e.target.getX(), 20));
+    e.target.y(Math.max(e.target.getY(),132/2));
+    e.target.x(Math.max(e.target.getX(), 10));
     e.target.x(Math.min(e.target.getX(), windowWidth-50));
     e.target.y(Math.min(e.target.getY(),drawHeight-150));
 });
