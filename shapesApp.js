@@ -56,7 +56,7 @@ function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
                 stroke:stroke,
                 strokeWidth:1,
                 draggable:draggable,
-                id: 'triangle',
+                id: rotation,
                 x:startX,
                 y:startY,
                 offset:{
@@ -87,7 +87,7 @@ function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
                 stroke:stroke,
                 strokeWidth:1,
                 draggable:draggable,
-                id: 'triangle',
+                id: rotation,
                 x:startX,
                 y:startY,
                 offset:{
@@ -118,7 +118,7 @@ function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
                 stroke:stroke,
                 strokeWidth:1,
                 draggable:draggable,
-                id: 'triangle',
+                id: rotation,
                 x:startX,
                 y:startY,
                 offset:{
@@ -148,7 +148,7 @@ function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
                 stroke:stroke,
                 strokeWidth:1,
                 draggable:draggable,
-                id: 'triangle',
+                id: rotation,
                 x:startX,
                 y:startY,
                 offset:{
@@ -178,7 +178,7 @@ function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
                 stroke:stroke,
                 strokeWidth:1,
                 draggable:draggable,
-                id: 'triangle',
+                id: rotation,
                 x:startX,
                 y:startY,
                 offset:{
@@ -213,6 +213,10 @@ draggableShapes.on("dragmove", (e) => {
 //rotation on dblclick:
 movable.on("dblclick",(e)=>{
     e.target.rotate(90);
+    if(e.target.getAttr('rotation') == 360)
+    {
+        e.target.setAttr('rotation', 0);
+    }
 })
 
 movable.on("click", e => {
@@ -221,7 +225,7 @@ movable.on("click", e => {
 
 
 shapes.on("click", e => {
-    console.log(e.target.getX(), e.target.getY());
+    console.log(e.target.getAttr('id'));
 })
 
 function drawTemplate() {
@@ -236,6 +240,7 @@ function drawTemplate() {
         height: B,
         fill: 'red',
         stroke: 'black',
+        id: 'square',
         strokeWidth: 1,
         draggable: false,
     });
@@ -246,6 +251,7 @@ function drawTemplate() {
         height: A,
         fill: 'red',
         stroke: 'black',
+        id: 'square',
         strokeWidth: 1,
         draggable: false,
     });
@@ -272,7 +278,6 @@ stage.on('dragstart', function (e) {
 
 stage.on('dragmove', function (evt) {
     activeDrag = evt.target
-    console.log("pidaras")
     var pos = stage.getPointerPosition();
     var shape = movable.getIntersection(pos);
     if (previousShape && shape) {
@@ -325,10 +330,13 @@ stage.on('dragmove', function (evt) {
     }
     console.log(staticShapes[5].getX())
 
-    if(staticShapes[5].getX() == activeDrag.getX())
-    {
-        console.log("suka");
-    }
+    staticShapes.forEach(e =>{
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation'))
+        {
+            e.setAttr('fill', 'green');
+        }
+    })
+
 });
 stage.on('dragend', function (e) {
     var pos = stage.getPointerPosition();
@@ -344,9 +352,35 @@ stage.on('dragend', function (e) {
     }
     previousShape = undefined;
     e.target.moveTo(movable);
+
+    staticShapes.forEach(e =>{
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation'))
+        {
+            if(activeDrag.getAttr('rotation') == 0)
+            {
+                activeDrag.setAttr('x', e.getX());
+                activeDrag.setAttr('y', e.getY() - (B-A)/2);
+            }
+            if(activeDrag.getAttr('rotation') == 90)
+            {
+                activeDrag.setAttr('x', e.getX() + (B-A)/2);
+                activeDrag.setAttr('y', e.getY());
+            }
+            if(activeDrag.getAttr('rotation') == 180)
+            {
+                activeDrag.setAttr('x', e.getX());
+                activeDrag.setAttr('y', e.getY() + (B-A)/2);
+            }
+            if(activeDrag.getAttr('rotation') == 270)
+            {
+                activeDrag.setAttr('x', e.getX() - (B-A)/2);
+                activeDrag.setAttr('y', e.getY());
+            }
+        }
+    })
 });
 stage.on('drop', e => {
-    console.log("suka");
+
 })
 stage.on('dragover', e => {
     /*if((e.target.getAttribute('id') === activeDrag.getAttribute('id')) && ((e.target.getAttribute('rotation') === activeDrag.getAttribute('rotation')))){
