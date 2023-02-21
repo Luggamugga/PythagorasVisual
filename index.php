@@ -15,9 +15,9 @@
     <div class="valueSelect">
         <form method="get" action="shapes.php">
             <label for="a" >a: </label>
-                <input type="number" name="a" id="a" min="10" max="100" required>
+                <input type="number" name="a" id="a" min="5" max="30" required>
             <label for="b" >b: </label>
-                <input type="number" name="b" id="b" min="10" max="100" required>
+                <input type="number" name="b" id="b" min="5" max="30" required>
             <button type="submit" id="submitButt">Submit</button>
         </form>
     </div>
