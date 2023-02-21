@@ -197,6 +197,31 @@ function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
 //tw0 example triangles:
 TriangleGen(500,500,"black","red",true, 0, 0);
 TriangleGen(200,200,"black","blue",true, 0, 0);
+let moveSquareBig = new Konva.Rect({
+    x: 350,
+    y: 250,
+    width: B,
+    height: B,
+    fill: 'red',
+    stroke: 'black',
+    id: 'square',
+    strokeWidth: 1,
+    draggable: true,
+})
+
+let moveSquareSmall = new Konva.Rect({
+    x: 250,
+    y: 200,
+    width: A,
+    height: A,
+    fill: 'red',
+    stroke: 'black',
+    id: 'square',
+    strokeWidth: 1,
+    draggable: true,
+})
+draggableShapes.add(moveSquareBig);
+draggableShapes.add(moveSquareSmall);
 
 movable.add(draggableShapes);
 stationary.add(shapes);
@@ -220,7 +245,7 @@ movable.on("dblclick",(e)=>{
 })
 
 movable.on("click", e => {
-    console.log(e.target.getAttr('rotation'))
+    console.log(e.target.getAttr('id'));
 })
 
 
@@ -270,6 +295,7 @@ stationary.zIndex(0);
 let tempLayer = new Konva.Layer();
 stage.add(tempLayer);
 let previousShape;
+
 
 stage.on('dragstart', function (e) {
     e.target.moveTo(tempLayer);
@@ -328,10 +354,13 @@ stage.on('dragmove', function (evt) {
         );
         previousShape = undefined;
     }
-    console.log(staticShapes[5].getX())
 
     staticShapes.forEach(e =>{
         if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation'))
+        {
+            e.setAttr('fill', 'green');
+        }
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))))
         {
             e.setAttr('fill', 'green');
         }
@@ -360,22 +389,37 @@ stage.on('dragend', function (e) {
             {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() - (B-A)/2);
+                activeDrag.setAttr('draggable', false)
+                activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 90)
             {
                 activeDrag.setAttr('x', e.getX() + (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
+                activeDrag.setAttr('draggable', false)
+                activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 180)
             {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() + (B-A)/2);
+                activeDrag.setAttr('draggable', false)
+                activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 270)
             {
                 activeDrag.setAttr('x', e.getX() - (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
+                activeDrag.setAttr('draggable', false)
+                activeDrag.moveTo(stationary)
             }
+        }
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))))
+        {
+            activeDrag.setAttr('x', e.getX());
+            activeDrag.setAttr('y', e.getY());
+            activeDrag.setAttr('draggable', false)
+            activeDrag.moveTo(stationary)
         }
     })
 });
