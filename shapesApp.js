@@ -22,7 +22,7 @@ let layer = new Konva.Layer();
 
 let movable = new Konva.Layer();
 let stationary = new Konva.Layer({
-    draggable:false;
+    draggable:false,
 });
 //group for draggableShapes:
 let draggableShapes = new Konva.Group();
