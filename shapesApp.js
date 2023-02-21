@@ -194,35 +194,40 @@ function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
     }
 
 }
-//tw0 example triangles:
-TriangleGen(500,500,"black","red",true, 0, 0);
-TriangleGen(200,200,"black","blue",true, 0, 0);
-let moveSquareBig = new Konva.Rect({
-    x: 350,
-    y: 250,
-    width: B,
-    height: B,
-    fill: 'red',
-    stroke: 'black',
-    id: 'square',
-    strokeWidth: 1,
-    draggable: true,
-})
+function rectGeN(startX,startY,stroke,fill,draggable,w,h){
+    let newRect = new Konva.Rect({
+        width:w,
+        height:h,
+        x:startX,
+        y:startY,
+        width:A,
+        height:A,
+        stroke:stroke,
+        fill:fill,
+        strokeWidth:1,
+        draggable:draggable,
+    })
+    draggableShapes.add(newRect)
+}
 
-let moveSquareSmall = new Konva.Rect({
-    x: 250,
-    y: 200,
-    width: A,
-    height: A,
-    fill: 'red',
-    stroke: 'black',
-    id: 'square',
-    strokeWidth: 1,
-    draggable: true,
-})
-draggableShapes.add(moveSquareBig);
-draggableShapes.add(moveSquareSmall);
+//generating drag Shapes:
+function generateDragShapes(){
+    let sX = windowWidth*0.65;
+    let sY = drawHeight/8;
+    let variX = windowWidth*0.20 ;
+    let variY = drawHeight*0.30;
+    TriangleGen(sX,sY,"black","lightblue",true,0,0);
+    TriangleGen(sX+variX,sY,"black","lightblue",true,0,0);
+    TriangleGen(sX+variX,sY+variY,"black","lightblue",true,0,0);
+    TriangleGen(sX,sY+variY,"black","lightblue",true,0,0);
 
+    draggableShapes.children.forEach(function(e){
+        e.rotate(180);
+    })
+    rectGeN(sX+variX-((A+B)/4),sY+variY+A,"black","lightblue",true,A,A);
+    rectGeN(sX-((A+B)/4),sY+variY+A,"black","lightblue",true,B,B);
+}
+generateDragShapes();
 movable.add(draggableShapes);
 stationary.add(shapes);
 stage.add(movable);
@@ -253,14 +258,23 @@ shapes.on("click", e => {
     console.log(e.target.getAttr('id'));
 })
 
-function drawTemplate() {
-    TriangleGen(500, 100, "black", "black", false,270, 1)
-    TriangleGen(500, 100, "black", "blue", false,90,  1)
-    TriangleGen(500 + (B/2) + (A/2), 100 + (A/2) + (B/2), "black", "white", false,0,  1)
-    TriangleGen(500 + (B/2) + (A/2), 100 + (A/2) + (B/2), "black", "black", false,180,  1)
+function drawTemplate(templateX,templateY) {
+    TriangleGen(templateX, templateY, "black", "black", false,270, 1)
+    TriangleGen(templateX, templateY, "black", "blue", false,90,  1)
+    TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "white", false,0,  1)
+    TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "black", false,180,  1)
+    let outlineSquare = new Konva.Rect({
+        x:templateX - B/2,
+        y:templateY - A/2,
+        width:A+B,
+        height:A+B,
+        opacity:1,
+        stroke:"black",
+        strokeWidth:1,
+    })
     let squareBig = new Konva.Rect({
-        x: 500 - (B/2),
-        y: 100 + (A/2),
+        x: templateX - (B/2),
+        y: templateY + (A/2),
         width: B,
         height: B,
         fill: 'red',
@@ -270,8 +284,8 @@ function drawTemplate() {
         draggable: false,
     });
     let squareSmall = new Konva.Rect({
-        x: 500 + (B/2),
-        y: 100 - (A/2),
+        x: templateX + (B/2),
+        y: templateY - (A/2),
         width: A,
         height: A,
         fill: 'red',
@@ -282,15 +296,22 @@ function drawTemplate() {
     });
     shapes.add(squareBig)
     shapes.add(squareSmall)
+    shapes.add(outlineSquare)
     staticShapes.push(squareSmall)
     staticShapes.push(squareBig)
+    staticShapes.push(outlineSquare)
     console.log(staticShapes[0].getX(), staticShapes[0].getY())
 }
 
-drawTemplate()
+drawTemplate(windowWidth/4,drawHeight/2-((A+B)/2)-20)
 
 movable.zIndex(1);
 stationary.zIndex(0);
+
+//setting the opacity of all shapes to 0:
+for(i in staticShapes){
+    staticShapes[i].opacity(1);
+}
 
 let tempLayer = new Konva.Layer();
 stage.add(tempLayer);
