@@ -26,10 +26,6 @@ let values = {
 
 let A = values.a * 10;
 let B = values.b * 10;
-/*let s = (A+B+C)/2;
-let radius = (A*B*C)/(4*Math.sqrt(s*(s-A)*(s-B)*(s-C)))
-*/
-//https://keisan.casio.com/exec/system/1223429573 : Formulae for radius
 
 function TriangleGen(startX,startY,stroke,fill,draggable){
     let P = [startX,startY];
