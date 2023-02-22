@@ -3,9 +3,9 @@ let windowWidth = window.innerWidth;
 let drawHeight = document.getElementById("draw").clientHeight;
 
 document.addEventListener("DOMContentLoaded",()=>{
-    console.log(windowHeight);
-
+    interactionSteps(1);
 })
+
 let stage = new Konva.Stage({
     container: "draw",
     width: windowWidth,
@@ -14,6 +14,7 @@ let stage = new Konva.Stage({
 
 let movable = new Konva.Layer();
 let stationary = new Konva.Layer();
+
 //group for draggableShapes:
 let draggableShapes = new Konva.Group();
 //group for stationary shapes (or maybe we do a layer idk):
@@ -51,8 +52,8 @@ function rectGeN(startX,startY,stroke,fill,draggable,w,h){
     draggableShapes.add(newRect)
 }
 function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
-    if (code == 0) {
-        if (rotation == 0) {
+    if (code === 0) {
+        if (rotation === 0) {
             let P = [startX, startY];
             let Q = [startX + A, startY];
             let R = [startX + A, startY + A]
@@ -82,7 +83,7 @@ function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
             draggableShapes.add(newTri);
         }
     }
-    if (code == 1) {
+    if (code === 1) {
         let P;
         let Q;
         let R;
@@ -164,18 +165,13 @@ stage.add(movable);
 stage.add(stationary);
 
 //limiting drag area:
-draggableShapes.on("dragmove", (e) => {
-    e.target.y(Math.max(e.target.getY(), 100))
-    e.target.x(Math.max(e.target.getX(), 20));
-    e.target.x(Math.min(e.target.getX(), windowWidth-50));
-    e.target.y(Math.min(e.target.getY(),drawHeight-200));
-});
+
 //rotation on dblclick:
 movable.on("dblclick",(e)=>{
-    if(e.target.getAttr("id") != "square"){
+    if(e.target.getAttr("id") !== "square"){
         e.target.rotate(90);
     }
-    if(e.target.getAttr('rotation') == 360)
+    if(e.target.getAttr('rotation') === 360)
     {
         e.target.setAttr('rotation', 0);
     }
@@ -236,8 +232,6 @@ function drawTemplate(templateX,templateY) {
     shapes.add(outlineSquare)
     staticShapes.push(squareSmall)
     staticShapes.push(squareBig)
-  //  staticShapes.push(outlineSquare)
-    console.log(staticShapes[0].getX(), staticShapes[0].getY())
 }
 
 drawTemplate(windowWidth/4,drawHeight/2-((A+B)/2)-20)
@@ -326,6 +320,8 @@ stage.on('dragmove', function (evt) {
 
 });
 stage.on('dragend', function (e) {
+    let TriCount = 0;
+    let SqCount = 0;
     var pos = stage.getPointerPosition();
     var shape = movable.getIntersection(pos);
     if (shape) {
@@ -336,6 +332,7 @@ stage.on('dragend', function (e) {
             },
             true
         );
+
     }
     previousShape = undefined;
     e.target.moveTo(movable);
@@ -343,7 +340,7 @@ stage.on('dragend', function (e) {
     staticShapes.forEach(e =>{
         if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && e.getAttr('name') == '0')
         {
-            if(activeDrag.getAttr('rotation') == 0)
+            if(activeDrag.getAttr('rotation') === 0)
             {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() - (B-A)/2);
@@ -351,7 +348,7 @@ stage.on('dragend', function (e) {
                 e.setAttr('name', '1');
                 activeDrag.moveTo(stationary)
             }
-            if(activeDrag.getAttr('rotation') == 90)
+            if(activeDrag.getAttr('rotation') === 90)
             {
                 activeDrag.setAttr('x', e.getX() + (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
@@ -359,7 +356,7 @@ stage.on('dragend', function (e) {
                 e.setAttr('name', '1');
                 activeDrag.moveTo(stationary);
             }
-            if(activeDrag.getAttr('rotation') == 180)
+            if(activeDrag.getAttr('rotation') === 180)
             {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() + (B-A)/2);
@@ -367,7 +364,7 @@ stage.on('dragend', function (e) {
                 e.setAttr('name', '1');
                 activeDrag.moveTo(stationary)
             }
-            if(activeDrag.getAttr('rotation') == 270)
+            if(activeDrag.getAttr('rotation') === 270)
             {
                 activeDrag.setAttr('x', e.getX() - (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
@@ -384,18 +381,76 @@ stage.on('dragend', function (e) {
             e.setAttr('name', '1');
             activeDrag.moveTo(stationary)
         }
-    })
+    });
+    stationary.children.forEach((e) => {
+        if (e.getAttr("id") === "triangle") {
+            TriCount++;
+            console.log(TriCount )
+        }
+
+        if (TriCount === 4) {
+            interactionSteps(2);
+        }
+
+    });
+   if(draggableShapes.children.length === 0){
+       interactionSteps(3);
+
+   }
+
+
 });
-stage.on('drop', e => {
 
-})
-stage.on('dragover', e => {
-    /*if((e.target.getAttribute('id') === activeDrag.getAttribute('id')) && ((e.target.getAttribute('rotation') === activeDrag.getAttribute('rotation')))){
-        activeDrag.setAttribute('fill', 'green');
-    }*/
+draggableShapes.children.forEach((e) => {
+    e.dragBoundFunc(function(pos){
+        return{
+            x:Math.max(pos.x,0),
+            y:Math.max(pos.y,132/2)
+        }
+    })
 
-    console.log("suka");
-})
+   /* e.target.y(Math.max(e.target.getY(), 100))
+    e.target.x(Math.max(e.target.getX(), 20));
+    e.target.x(Math.min(e.target.getX(), windowWidth-50));
+    e.target.y(Math.min(e.target.getY(),drawHeight-200));*/
+});
+
+let nxtButt = document.getElementById("nextButt");
+nxtButt.style.display = "none";
+//steps function:
+function interactionSteps(step){
+    let txt = document.getElementById("textContainer");
+    draggableShapes.children.forEach((e)=>{
+        if(e.getAttr("id") === "square" && step === 1){
+            e.setAttr("draggable",false);
+        } else if(step === 2){
+            e.setAttr("draggable",true);
+        }
+    })
+    switch(step){
+        case 1:
+            txt.innerHTML = "Step 1: Triangles";
+            break;
+        case 2:
+            txt.innerText = "Step 2: Rectangles";
+            break;
+        case 3:
+            txt.innerText = "Explaining Explaining ...";
+            nxtButt.style.display = "block";
+            break;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 //maths Functions to find Circumcenter:
 function line(P, Q) {

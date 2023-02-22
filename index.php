@@ -11,7 +11,7 @@
     <div class="bigHeader">Interactive Proof of the Pythagoras Theorem!</div>
     <div class="subheading">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet</div>
     <div id="OverlayChildren">
-    <div class="header">Pick your preferred Values(10-100):</div>
+    <div class="header">Pick your preferred Values(5-30):</div>
     <div class="valueSelect">
         <form method="get" action="shapes.php">
             <label for="a" >a: </label>
