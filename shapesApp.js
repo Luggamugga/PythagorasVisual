@@ -2,6 +2,13 @@ let windowHeight = window.innerHeight;
 let windowWidth = window.innerWidth;
 let drawHeight = document.getElementById("draw").clientHeight;
 
+let lvl;
+if(window.location.href.includes("shapes2")){
+    lvl=2;
+} else {
+    lvl=1;
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
     interactionSteps(1);
 })

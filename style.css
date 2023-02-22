@@ -83,3 +83,8 @@ text-align:justify;
     background-color: antiquewhite;
     font-size:20px;
 }
+#nextButtContainer{
+    right: 21%;
+    position: absolute;
+    top: 112px;
+}
