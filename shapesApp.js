@@ -231,7 +231,7 @@ function drawTemplate(templateX,templateY) {
     shapes.add(outlineSquare)
     staticShapes.push(squareSmall)
     staticShapes.push(squareBig)
-    staticShapes.push(outlineSquare)
+  //  staticShapes.push(outlineSquare)
     console.log(staticShapes[0].getX(), staticShapes[0].getY())
 }
 
