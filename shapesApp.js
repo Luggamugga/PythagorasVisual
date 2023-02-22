@@ -172,7 +172,9 @@ draggableShapes.on("dragmove", (e) => {
 });
 //rotation on dblclick:
 movable.on("dblclick",(e)=>{
-    e.target.rotate(90);
+    if(e.target.getAttr("id") != "square"){
+        e.target.rotate(90);
+    }
     if(e.target.getAttr('rotation') == 360)
     {
         e.target.setAttr('rotation', 0);
