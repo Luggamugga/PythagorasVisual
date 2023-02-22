@@ -2,14 +2,9 @@ let windowHeight = window.innerHeight;
 let windowWidth = window.innerWidth;
 let drawHeight = document.getElementById("draw").clientHeight;
 
-
-
 document.addEventListener("DOMContentLoaded",()=>{
     console.log(windowHeight);
 
-})
-document.addEventListener("click",(e)=>{
-    console.log(e.pageX,e.pageY);
 })
 let stage = new Konva.Stage({
     container: "draw",
@@ -19,232 +14,59 @@ let stage = new Konva.Stage({
 
 let layer = new Konva.Layer();
 //group for draggableShapes:
-
-let movable = new Konva.Layer();
-let stationary = new Konva.Layer({
-    draggable:false,
-});
-//group for draggableShapes:
 let draggableShapes = new Konva.Group();
 //group for stationary shapes (or maybe we do a layer idk):
-let staticShapes = [];
-let shapes = new Konva.Group();
-
+let staticShapes = new Konva.Group();
 
 //getting length values from $_GET request in url:
 let tempVal = window.location.href.split("?");
 let temp1 = tempVal[1].split("&");
 let values = {
     a: temp1[0].split("=")[1],
-    b: temp1[1].split("=")[1],
+    b: temp1[1].split("=")[1]
 }
-
 let A = values.a * 10;
 let B = values.b * 10;
+/*let s = (A+B+C)/2;
+let radius = (A*B*C)/(4*Math.sqrt(s*(s-A)*(s-B)*(s-C)))
+*/
+//https://keisan.casio.com/exec/system/1223429573 : Formulae for radius
 
-
-let activeDrag;
-
-function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
-    if(code == 0){
-        if(rotation == 0){
-            let P = [startX,startY];
-            let Q = [startX+A,startY];
-            let R = [startX+A,startY+A]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX+A,startY);
-                    context.lineTo(startX+A,startY+B);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: 'triangle',
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            draggableShapes.add(newTri);
-        }
-    }
-    if(code == 1){
-        if(rotation == 90){
-            let P = [startX,startY];
-            let Q = [startX,startY+A];
-            let R = [startX-B,startY+A]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX,startY+A);
-                    context.lineTo(startX-B,startY+A);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: 'triangle',
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            staticShapes.push(newTri);
-            shapes.add(newTri);
-        }
-        if(rotation == 0)
-        {
-            let P = [startX,startY];
-            let Q = [startX+A,startY+B];
-            let R = [startX+A,startY]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX+A,startY);
-                    context.lineTo(startX+A,startY+B);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: 'triangle',
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            staticShapes.push(newTri);
-            shapes.add(newTri);
-        }
-        if(rotation == 180){
-            let P = [startX,startY];
-            let Q = [startX,startY+B];
-            let R = [startX+A,startY+B]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX,startY+B);
-                    context.lineTo(startX+A,startY+B);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: 'triangle',
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            staticShapes.push(newTri);
-            shapes.add(newTri);
-        }
-        if(rotation == 270){
-            let P = [startX,startY];
-            let Q = [startX+B,startY];
-            let R = [startX,startY+A]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX+B,startY);
-                    context.lineTo(startX,startY+A);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: 'triangle',
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            staticShapes.push(newTri);
-            shapes.add(newTri);
-        }
-
-    }
-
-}
-
-
-
-
-function rectGeN(startX,startY,stroke,fill,draggable,w,h){
-    let newRect = new Konva.Rect({
-        width:w,
-        height:h,
-        x:startX,
-        y:startY,
-        width:A,
-        height:A,
-        stroke:stroke,
+function TriangleGen(startX,startY,stroke,fill,draggable){
+    let P = [startX,startY];
+    let Q = [startX+A,startY];
+    let R = [startX+A,startY+A]
+    let arr = findCircumCenter(P,Q,R);
+    let newTri = new Konva.Shape({
+        sceneFunc:function(context,shape){
+            context.beginPath();
+            context.moveTo(startX,startY);
+            context.lineTo(startX+A,startY);
+            context.lineTo(startX+A,startY+B);
+            context.closePath();
+            context.fillStrokeShape(shape);
+        },
         fill:fill,
+        stroke:stroke,
         strokeWidth:1,
         draggable:draggable,
-    })
-    draggableShapes.add(newRect)
+        x:startX,
+        y:startY,
+        offset:{
+            x:arr[0],
+            y:arr[1]
+        }
+    });
+    layer.add(newTri);
+    draggableShapes.add(newTri);
 }
+//tw0 example triangles:
+TriangleGen(500,500,"black","white",true);
+TriangleGen(600,600,"black","white",true);
 
-//generating drag Shapes:
-function generateDragShapes(){
-    let sX = windowWidth*0.65;
-    let sY = drawHeight/8;
-    let variX = windowWidth*0.20 ;
-    let variY = drawHeight*0.30;
-    TriangleGen(sX,sY,"black","lightblue",true,0,0);
-    TriangleGen(sX+variX,sY,"black","lightblue",true,0,0);
-    TriangleGen(sX+variX,sY+variY,"black","lightblue",true,0,0);
-    TriangleGen(sX,sY+variY,"black","lightblue",true,0,0);
+layer.add(draggableShapes);
+stage.add(layer);
 
-    draggableShapes.children.forEach(function(e){
-        e.rotate(180);
-    })
-    rectGeN(sX+variX-((A+B)/4),sY+variY+A,"black","lightblue",true,A,A);
-    rectGeN(sX-((A+B)/4),sY+variY+A,"black","lightblue",true,B,B);
-}
-generateDragShapes();
-movable.add(draggableShapes);
-stationary.add(shapes);
-stage.add(movable);
-stage.add(stationary);
 //limiting drag area:
 draggableShapes.on("dragmove", (e) => {
     e.target.y(Math.max(e.target.getY(), 100))
@@ -253,167 +75,8 @@ draggableShapes.on("dragmove", (e) => {
     e.target.y(Math.min(e.target.getY(),drawHeight-200));
 });
 //rotation on dblclick:
-movable.on("dblclick",(e)=>{
+draggableShapes.on("dblclick",(e)=>{
     e.target.rotate(90);
-})
-
-
-movable.on("click", e => {
-    console.log(e.target.getAttr('rotation'))
-})
-
-
-shapes.on("click", e => {
-    console.log(e.target.getX(), e.target.getY());
-})
-
-function drawTemplate(templateX,templateY) {
-    TriangleGen(templateX, templateY, "black", "black", false,270, 1)
-    TriangleGen(templateX, templateY, "black", "blue", false,90,  1)
-    TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "white", false,0,  1)
-    TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "black", false,180,  1)
-   let outlineSquare = new Konva.Rect({
-       x:templateX - B/2,
-       y:templateY - A/2,
-       width:A+B,
-       height:A+B,
-       opacity:1,
-       stroke:"black",
-       strokeWidth:1,
-   })
-
-    let squareBig = new Konva.Rect({
-        x: templateX - (B/2),
-        y: templateY + (A/2),
-        width: B,
-        height: B,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 1,
-        draggable: false,
-    });
-    let squareSmall = new Konva.Rect({
-        x: templateX + (B/2),
-        y: templateY - (A/2),
-        width: A,
-        height: A,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 1,
-        draggable: false,
-    });
-    shapes.add(squareBig)
-    shapes.add(squareSmall)
-    shapes.add(outlineSquare)
-    staticShapes.push(squareSmall)
-    staticShapes.push(squareBig)
-    console.log(staticShapes[0].getX(), staticShapes[0].getY())
-}
-
-drawTemplate(windowWidth/4,drawHeight/2-((A+B)/2)-20);
-
-movable.zIndex(1);
-stationary.zIndex(0);
-
-
-//setting the opacity of all shapes to 0:
-for(i in staticShapes){
-    staticShapes[i].opacity(1);
-}
-
-let tempLayer = new Konva.Layer();
-stage.add(tempLayer);
-let previousShape;
-
-stage.on('dragstart', function (e) {
-    e.target.moveTo(tempLayer);
-    movable.draw();
-});
-
-stage.on('dragmove', function (evt) {
-    activeDrag = evt.target
-    console.log("pidaras")
-    var pos = stage.getPointerPosition();
-    var shape = movable.getIntersection(pos);
-    if (previousShape && shape) {
-        if (previousShape !== shape) {
-            // leave from old targer
-            previousShape.fire(
-                'dragleave',
-                {
-                    evt: evt.evt,
-                },
-                true
-            );
-
-            // enter new targer
-            shape.fire(
-                'dragenter',
-                {
-                    evt: evt.evt,
-                },
-                true
-            );
-            previousShape = shape;
-        } else {
-            previousShape.fire(
-                'dragover',
-                {
-                    evt: evt.evt,
-                },
-                true
-            );
-        }
-    } else if (!previousShape && shape) {
-        previousShape = shape;
-        shape.fire(
-            'dragenter',
-            {
-                evt: evt.evt,
-            },
-            true
-        );
-    } else if (previousShape && !shape) {
-        previousShape.fire(
-            'dragleave',
-            {
-                evt: evt.evt,
-            },
-            true
-        );
-        previousShape = undefined;
-    }
-    console.log(staticShapes[5].getX())
-
-    if(staticShapes[5].getX() == activeDrag.getX())
-    {
-        console.log("suka");
-    }
-});
-stage.on('dragend', function (e) {
-    var pos = stage.getPointerPosition();
-    var shape = movable.getIntersection(pos);
-    if (shape) {
-        previousShape.fire(
-            'drop',
-            {
-                evt: e.evt,
-            },
-            true
-        );
-    }
-    previousShape = undefined;
-    e.target.moveTo(movable);
-});
-stage.on('drop', e => {
-    console.log("suka");
-})
-stage.on('dragover', e => {
-    /*if((e.target.getAttribute('id') === activeDrag.getAttribute('id')) && ((e.target.getAttribute('rotation') === activeDrag.getAttribute('rotation')))){
-        activeDrag.setAttribute('fill', 'green');
-    }*/
-
-    console.log("suka");
 })
 
 
@@ -496,3 +159,6 @@ function findCircumCenter(P, Q, R) {
 }
 
 // Driver code.
+
+
+// The code is contributed by Gautam goel (gautamgoel962)
