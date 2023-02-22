@@ -36,180 +36,96 @@ let radius = (A*B*C)/(4*Math.sqrt(s*(s-A)*(s-B)*(s-C)))
 
 //current active shape
 let activeDrag;
-function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
-    if(code == 0){
-        if(rotation == 0){
-            let P = [startX,startY];
-            let Q = [startX+A,startY];
-            let R = [startX+A,startY+A]
-            let arr = findCircumCenter(P,Q,R);
+function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
+    if (code == 0) {
+        if (rotation == 0) {
+            let P = [startX, startY];
+            let Q = [startX + A, startY];
+            let R = [startX + A, startY + A]
+            let arr = findCircumCenter(P, Q, R);
             let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
+                sceneFunc: function (context, shape) {
                     context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX+A,startY);
-                    context.lineTo(startX+A,startY+B);
+                    context.moveTo(startX, startY);
+                    context.lineTo(startX + A, startY);
+                    context.lineTo(startX + A, startY + B);
                     context.closePath();
                     context.fillStrokeShape(shape);
                 },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: rotation,
+                fill: fill,
+                stroke: stroke,
+                strokeWidth: 1,
+                draggable: draggable,
+                id: 'triangle',
                 name: 0,
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
+                x: startX,
+                y: startY,
+                offset: {
+                    x: arr[0],
+                    y: arr[1]
                 }
             });
             //layer.add(newTri);
             draggableShapes.add(newTri);
         }
     }
-    if(code == 1){
-        if(rotation == 90){
-            let P = [startX,startY];
-            let Q = [startX,startY+A];
-            let R = [startX-B,startY+A]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX,startY+A);
-                    context.lineTo(startX-B,startY+A);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: rotation,
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            staticShapes.push(newTri);
-            shapes.add(newTri);
+    if (code == 1) {
+        let P;
+        let Q;
+        let R;
+        let arr;
+        switch (rotation) {
+            case 90:
+                P = [startX, startY];
+                Q = [startX, startY + A];
+                R = [startX - B, startY + A]
+                arr = findCircumCenter(P, Q, R);
+                break;
+            case 0:
+                P = [startX, startY];
+                Q = [startX + A, startY + B];
+                R = [startX + A, startY]
+                arr = findCircumCenter(P, Q, R);
+                break;
+            case 180:
+                P = [startX, startY];
+                Q = [startX, startY + B];
+                R = [startX + A, startY + B]
+                arr = findCircumCenter(P, Q, R);
+                break;
+            case 270:
+                P = [startX, startY];
+                Q = [startX + B, startY];
+                R = [startX, startY + A]
+                arr = findCircumCenter(P, Q, R);
         }
-        if(rotation == 0)
-        {
-            let P = [startX,startY];
-            let Q = [startX+A,startY+B];
-            let R = [startX+A,startY]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX+A,startY);
-                    context.lineTo(startX+A,startY+B);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: rotation,
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            staticShapes.push(newTri);
-            shapes.add(newTri);
-        }
-        if(rotation == 180){
-            let P = [startX,startY];
-            let Q = [startX,startY+B];
-            let R = [startX+A,startY+B]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX,startY+B);
-                    context.lineTo(startX+A,startY+B);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: rotation,
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            staticShapes.push(newTri);
-            shapes.add(newTri);
-        }
-        if(rotation == 270){
-            let P = [startX,startY];
-            let Q = [startX+B,startY];
-            let R = [startX,startY+A]
-            let arr = findCircumCenter(P,Q,R);
-            let newTri = new Konva.Shape({
-                sceneFunc:function(context,shape){
-                    context.beginPath();
-                    context.moveTo(startX,startY);
-                    context.lineTo(startX+B,startY);
-                    context.lineTo(startX,startY+A);
-                    context.closePath();
-                    context.fillStrokeShape(shape);
-                },
-                fill:fill,
-                stroke:stroke,
-                strokeWidth:1,
-                draggable:draggable,
-                id: rotation,
-                x:startX,
-                y:startY,
-                offset:{
-                    x:arr[0],
-                    y:arr[1]
-                }
-            });
-            //layer.add(newTri);
-            staticShapes.push(newTri);
-            shapes.add(newTri);
-        }
-
+        let newTri = new Konva.Shape({
+            sceneFunc: function (context, shape) {
+                context.beginPath();
+                context.moveTo(P[0], P[1]);
+                context.lineTo(Q[0], Q[1]);
+                context.lineTo(R[0], R[1]);
+                context.closePath();
+                context.fillStrokeShape(shape);
+            },
+            fill: fill,
+            stroke: stroke,
+            strokeWidth: 1,
+            draggable: draggable,
+            id: 'triangle',
+            point:0,
+            x: startX,
+            y: startY,
+            offset: {
+                x: arr[0],
+                y: arr[1]
+            }
+        });
+        //layer.add(newTri);
+        staticShapes.push(newTri);
+        shapes.add(newTri);
     }
-
 }
-function rectGeN(startX,startY,stroke,fill,draggable,w,h){
-    let newRect = new Konva.Rect({
-        width:w,
-        height:h,
-        x:startX,
-        y:startY,
-        stroke:stroke,
-        fill:fill,
-        id: 'square',
-        strokeWidth:1,
-        draggable:draggable,
-    })
-    draggableShapes.add(newRect)
-}
-
 //generating drag Shapes:
 function generateDragShapes(){
     let sX = windowWidth*0.65;
