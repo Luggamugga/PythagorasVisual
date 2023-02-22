@@ -198,6 +198,7 @@ function drawTemplate(templateX,templateY) {
         id: 'square',
         strokeWidth: 1,
         draggable: false,
+        name:0,
     });
     let squareSmall = new Konva.Rect({
         x: templateX + (B/2),
@@ -209,6 +210,7 @@ function drawTemplate(templateX,templateY) {
         id: 'square',
         strokeWidth: 1,
         draggable: false,
+        name:0,
     });
     shapes.add(squareBig)
     shapes.add(squareSmall)
