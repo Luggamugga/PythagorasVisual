@@ -57,6 +57,7 @@ function TriangleGen(startX,startY,stroke,fill,draggable,rotation, code){
                 strokeWidth:1,
                 draggable:draggable,
                 id: rotation,
+                name: 0,
                 x:startX,
                 y:startY,
                 offset:{
