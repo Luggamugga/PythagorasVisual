@@ -322,42 +322,47 @@ stage.on('dragend', function (e) {
     e.target.moveTo(movable);
 
     staticShapes.forEach(e =>{
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation'))
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && e.getAttribute(name) != 1)
         {
             if(activeDrag.getAttr('rotation') == 0)
             {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() - (B-A)/2);
-                activeDrag.setAttr('draggable', false)
+                activeDrag.setAttr('draggable', false);
+                e.setAttribute(name) = 1;
                 activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 90)
             {
                 activeDrag.setAttr('x', e.getX() + (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
-                activeDrag.setAttr('draggable', false)
-                activeDrag.moveTo(stationary)
+                activeDrag.setAttr('draggable', false);
+                e.setAttribute(name) = 1;
+                activeDrag.moveTo(stationary);
             }
             if(activeDrag.getAttr('rotation') == 180)
             {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() + (B-A)/2);
-                activeDrag.setAttr('draggable', false)
+                activeDrag.setAttr('draggable', false);
+                e.setAttribute(name) = 1;
                 activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 270)
             {
                 activeDrag.setAttr('x', e.getX() - (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
-                activeDrag.setAttr('draggable', false)
+                activeDrag.setAttr('draggable', false);
+                                e.setAttribute(name) = 1;
                 activeDrag.moveTo(stationary)
             }
         }
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))))
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))) && e.getAttribute(name) != 1)
         {
             activeDrag.setAttr('x', e.getX());
             activeDrag.setAttr('y', e.getY());
             activeDrag.setAttr('draggable', false)
+                            e.setAttribute(name) = 1;
             activeDrag.moveTo(stationary)
         }
     })
