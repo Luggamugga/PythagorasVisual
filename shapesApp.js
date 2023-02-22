@@ -343,7 +343,7 @@ stage.on('dragend', function (e) {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() - (B-A)/2);
                 activeDrag.setAttr('draggable', false);
-                e.setAttribute(name) = 1;
+                e.getAttribute(name) = 1;
                 activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 90)
@@ -351,7 +351,7 @@ stage.on('dragend', function (e) {
                 activeDrag.setAttr('x', e.getX() + (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
                 activeDrag.setAttr('draggable', false);
-                e.setAttribute(name) = 1;
+                e.getAttribute(name) = 1;
                 activeDrag.moveTo(stationary);
             }
             if(activeDrag.getAttr('rotation') == 180)
@@ -359,7 +359,7 @@ stage.on('dragend', function (e) {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() + (B-A)/2);
                 activeDrag.setAttr('draggable', false);
-                e.setAttribute(name) = 1;
+                e.getAttribute(name) = 1;
                 activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 270)
@@ -367,7 +367,7 @@ stage.on('dragend', function (e) {
                 activeDrag.setAttr('x', e.getX() - (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
                 activeDrag.setAttr('draggable', false);
-                e.setAttribute(name) = 1;
+                e.getAttribute(name) = 1;
                 activeDrag.moveTo(stationary)
             }
         }
@@ -376,7 +376,7 @@ stage.on('dragend', function (e) {
             activeDrag.setAttr('x', e.getX());
             activeDrag.setAttr('y', e.getY());
             activeDrag.setAttr('draggable', false)
-            e.setAttribute(name) = 1;
+            e.getAttribute(name) = 1;
             activeDrag.moveTo(stationary)
         }
     })
