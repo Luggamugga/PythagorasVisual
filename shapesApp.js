@@ -200,10 +200,9 @@ function rectGeN(startX,startY,stroke,fill,draggable,w,h){
         height:h,
         x:startX,
         y:startY,
-        width:A,
-        height:A,
         stroke:stroke,
         fill:fill,
+        id: 'square',
         strokeWidth:1,
         draggable:draggable,
     })
@@ -377,11 +376,11 @@ stage.on('dragmove', function (evt) {
     }
 
     staticShapes.forEach(e =>{
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation'))
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') === 'square' && activeDrag.getAttr('id') === 'square' && ((e.getAttr('width') === activeDrag.getAttr('width'))))
         {
             e.setAttr('fill', 'green');
         }
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))))
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && activeDrag.getAttr('id') != 'square')
         {
             e.setAttr('fill', 'green');
         }
