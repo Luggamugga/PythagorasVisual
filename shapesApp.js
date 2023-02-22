@@ -371,31 +371,17 @@ stage.on('dragover', e => {
     console.log("suka");
 })
 
-
-//TODO: rewrite this code!:
-
-// JavaScript program to find the CIRCUMCENTER of a
-// triangle
-
-// This pair is used to store the X and Y
-// coordinate of a point respectively
-// #define pdd pair<double, double>
-
-// Function to find the line given two points
-function lineFromPoints(P, Q) {
+//maths Functions to find Circumcenter:
+function line(P, Q) {
     let a = Q[1] - P[1];
     let b = P[0] - Q[0];
     let c = a * (P[0]) + b * (P[1]);
-    return [a, b, c];
+    return [a,b,c];
 }
 
-// Function which converts the input line to its
-// perpendicular bisector. It also inputs the points
-// whose mid-point lies on the bisector
-function perpendicularBisectorFromLine(P, Q, a, b, c) {
+function PBisect(P, Q, a, b, c) {
     let mid_point = [(P[0] + Q[0]) / 2, (P[1] + Q[1]) / 2];
 
-    // c = -bx + ay
     c = -b * (mid_point[0]) + a * (mid_point[1]);
 
     let temp = a;
@@ -404,12 +390,10 @@ function perpendicularBisectorFromLine(P, Q, a, b, c) {
     return [a, b, c];
 }
 
-// Returns the intersection point of two lines
-function lineLineIntersection(a1, b1, c1, a2, b2, c2) {
+function linelineIntersect(a1, b1, c1, a2, b2, c2) {
     let determinant = a1 * b2 - a2 * b1;
     if (determinant == 0) {
-        // The lines are parallel. This is simplified
-        // by returning a pair of FLT_MAX
+      
         return [(10.0) ** 19, (10.0) ** 19];
     } else {
         let x = (b2 * c1 - b1 * c2) / determinant;
@@ -419,36 +403,26 @@ function lineLineIntersection(a1, b1, c1, a2, b2, c2) {
 }
 
 function findCircumCenter(P, Q, R) {
-    // Line PQ is represented as ax + by = c
-    let PQ_line = lineFromPoints(P, Q);
-    let a = PQ_line[0];
-    let b = PQ_line[1];
-    let c = PQ_line[2];
+    let PQ = line(P, Q);
+    let a = PQ[0];
+    let b = PQ[1];
+    let c = PQ[2];
 
-    // Line QR is represented as ex + fy = g
-    let QR_line = lineFromPoints(Q, R);
-    let e = QR_line[0];
-    let f = QR_line[1];
-    let g = QR_line[2];
+    let QR = line(Q, R);
+    let e = QR[0];
+    let f = QR[1];
+    let g = QR[2];
 
-    // Converting lines PQ and QR to perpendicular
-    // vbisectors. After this, L = ax + by = c
-    // M = ex + fy = g
-    let PQ_perpendicular = perpendicularBisectorFromLine(P, Q, a, b, c);
-    a = PQ_perpendicular[0];
-    b = PQ_perpendicular[1];
-    c = PQ_perpendicular[2];
+    let PQ_Perp = PBisect(P, Q, a, b, c);
+    a = PQ_Perp[0];
+    b = PQ_Perp[1];
+    c = PQ_Perp[2];
 
-    let QR_perpendicular = perpendicularBisectorFromLine(Q, R, e, f, g);
-    e = QR_perpendicular[0];
-    f = QR_perpendicular[1];
-    g = QR_perpendicular[2];
+    let QR_Perp = PBisect(Q, R, e, f, g);
+    e = QR_Perp[0];
+    f = QR_Perp[1];
+    g = QR_Perp[2];
 
-    // The point of intersection of L and M gives
-    // the circumcenter
-    return lineLineIntersection(a, b, c, e, f, g);
+    return llI(a, b, c, e, f, g);
 
 }
-
-// Driver code.
-
