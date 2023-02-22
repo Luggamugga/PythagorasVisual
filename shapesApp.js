@@ -71,7 +71,6 @@ function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
                 strokeWidth: 1,
                 draggable: draggable,
                 id: 'triangle',
-                name: 0,
                 x: startX,
                 y: startY,
                 offset: {
@@ -126,8 +125,8 @@ function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
             stroke: stroke,
             strokeWidth: 1,
             draggable: draggable,
-            id: 'triangle',
-            name:0,
+            id: rotation,
+            name:'0',
             x: startX,
             y: startY,
             offset: {
@@ -200,6 +199,7 @@ function drawTemplate(templateX,templateY) {
         height:A+B,
         opacity:1,
         stroke:"black",
+        id: 'square',
         strokeWidth:1,
     })
     let squareBig = new Konva.Rect({
@@ -212,7 +212,7 @@ function drawTemplate(templateX,templateY) {
         id: 'square',
         strokeWidth: 1,
         draggable: false,
-        name:0,
+        name:'0',
     });
     let squareSmall = new Konva.Rect({
         x: templateX + (B/2),
@@ -224,7 +224,7 @@ function drawTemplate(templateX,templateY) {
         id: 'square',
         strokeWidth: 1,
         draggable: false,
-        name:0,
+        name:'0',
     });
     shapes.add(squareBig)
     shapes.add(squareSmall)
@@ -336,14 +336,14 @@ stage.on('dragend', function (e) {
     e.target.moveTo(movable);
 
     staticShapes.forEach(e =>{
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && e.getAttribute(name) != 1)
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && e.getAttr('name') == '0')
         {
             if(activeDrag.getAttr('rotation') == 0)
             {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() - (B-A)/2);
                 activeDrag.setAttr('draggable', false);
-                e.getAttribute(name) = 1;
+                e.setAttr('name', '1');
                 activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 90)
@@ -351,7 +351,7 @@ stage.on('dragend', function (e) {
                 activeDrag.setAttr('x', e.getX() + (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
                 activeDrag.setAttr('draggable', false);
-                e.getAttribute(name) = 1;
+                e.setAttr('name', '1');
                 activeDrag.moveTo(stationary);
             }
             if(activeDrag.getAttr('rotation') == 180)
@@ -359,7 +359,7 @@ stage.on('dragend', function (e) {
                 activeDrag.setAttr('x', e.getX());
                 activeDrag.setAttr('y', e.getY() + (B-A)/2);
                 activeDrag.setAttr('draggable', false);
-                e.getAttribute(name) = 1;
+                e.setAttr('name', '1');
                 activeDrag.moveTo(stationary)
             }
             if(activeDrag.getAttr('rotation') == 270)
@@ -367,16 +367,16 @@ stage.on('dragend', function (e) {
                 activeDrag.setAttr('x', e.getX() - (B-A)/2);
                 activeDrag.setAttr('y', e.getY());
                 activeDrag.setAttr('draggable', false);
-                e.getAttribute(name) = 1;
+                e.setAttr('name', '1');
                 activeDrag.moveTo(stationary)
             }
         }
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))) && e.getAttribute(name) != 1)
+        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))) && e.getAttr('name') == '0')
         {
             activeDrag.setAttr('x', e.getX());
             activeDrag.setAttr('y', e.getY());
             activeDrag.setAttr('draggable', false)
-            e.getAttribute(name) = 1;
+            e.setAttr('name', '1');
             activeDrag.moveTo(stationary)
         }
     })
