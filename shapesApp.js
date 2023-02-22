@@ -129,6 +129,7 @@ function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
             name:'0',
             x: startX,
             y: startY,
+            opacity:0,
             offset: {
                 x: arr[0],
                 y: arr[1]
@@ -188,10 +189,10 @@ shapes.on("click", e => {
 })
 
 function drawTemplate(templateX,templateY) {
-    TriangleGen(templateX, templateY, "black", "black", false,270, 1)
-    TriangleGen(templateX, templateY, "black", "blue", false,90,  1)
+    TriangleGen(templateX, templateY, "black", "white", false,270, 1)
+    TriangleGen(templateX, templateY, "black", "white", false,90,  1)
     TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "white", false,0,  1)
-    TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "black", false,180,  1)
+    TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "white", false,180,  1)
     let outlineSquare = new Konva.Rect({
         x:templateX - B/2,
         y:templateY - A/2,
@@ -207,24 +208,26 @@ function drawTemplate(templateX,templateY) {
         y: templateY + (A/2),
         width: B,
         height: B,
-        fill: 'red',
+        fill: 'white',
         stroke: 'black',
         id: 'square',
         strokeWidth: 1,
         draggable: false,
         name:'0',
+        opacity:0,
     });
     let squareSmall = new Konva.Rect({
         x: templateX + (B/2),
         y: templateY - (A/2),
         width: A,
         height: A,
-        fill: 'red',
+        fill: 'white',
         stroke: 'black',
         id: 'square',
         strokeWidth: 1,
         draggable: false,
         name:'0',
+        opacity:0,
     });
     shapes.add(squareBig)
     shapes.add(squareSmall)
@@ -241,9 +244,9 @@ movable.zIndex(1);
 stationary.zIndex(0);
 
 //setting the opacity of all shapes to 0:
-for(i in staticShapes){
-    staticShapes[i].opacity(1);
-}
+/*for(i in staticShapes){
+    staticShapes[i].opacity(0);
+}*/
 
 let tempLayer = new Konva.Layer();
 stage.add(tempLayer);
@@ -311,11 +314,11 @@ stage.on('dragmove', function (evt) {
     staticShapes.forEach(e =>{
         if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') === 'square' && activeDrag.getAttr('id') === 'square' && ((e.getAttr('width') === activeDrag.getAttr('width'))))
         {
-            e.setAttr('fill', 'green');
+            e.opacity(1);
         }
         if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && activeDrag.getAttr('id') != 'square')
         {
-            e.setAttr('fill', 'green');
+            e.opacity(1);
         }
     })
 
