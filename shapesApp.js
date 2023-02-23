@@ -3,13 +3,13 @@ let windowWidth = window.innerWidth;
 let drawHeight = document.getElementById("draw").clientHeight;
 
 let lvl;
-if(window.location.href.includes("shapes2")){
-    lvl=2;
+if (window.location.href.includes("shapes2")) {
+    lvl = 2;
 } else {
-    lvl=1;
+    lvl = 1;
 }
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", () => {
     interactionSteps(1);
 })
 
@@ -44,20 +44,22 @@ let radius = (A*B*C)/(4*Math.sqrt(s*(s-A)*(s-B)*(s-C)))
 
 //current active shape
 let activeDrag;
-function rectGeN(startX,startY,stroke,fill,draggable,w,h){
+
+function   rectGeN(startX, startY, stroke, fill, draggable, w, h) {
     let newRect = new Konva.Rect({
-        width:w,
-        height:h,
-        x:startX,
-        y:startY,
-        stroke:stroke,
-        fill:fill,
+        width: w,
+        height: h,
+        x: startX,
+        y: startY,
+        stroke: stroke,
+        fill: fill,
         id: 'square',
-        strokeWidth:1,
-        draggable:draggable,
+        strokeWidth: 1,
+        draggable: draggable,
     })
     draggableShapes.add(newRect)
 }
+
 function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
     if (code === 0) {
         if (rotation === 0) {
@@ -134,10 +136,10 @@ function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
             strokeWidth: 1,
             draggable: draggable,
             id: rotation,
-            name:'0',
+            name: '0',
             x: startX,
             y: startY,
-            opacity:0,
+            opacity: 0,
             offset: {
                 x: arr[0],
                 y: arr[1]
@@ -148,23 +150,50 @@ function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
         shapes.add(newTri);
     }
 }
-//generating drag Shapes:
-function generateDragShapes(){
-    let sX = windowWidth*0.65;
-    let sY = drawHeight/8;
-    let variX = windowWidth*0.20 ;
-    let variY = drawHeight*0.30;
-    TriangleGen(sX,sY,"black","lightblue",true,0,0);
-    TriangleGen(sX+variX,sY,"black","lightblue",true,0,0);
-    TriangleGen(sX+variX,sY+variY,"black","lightblue",true,0,0);
-    TriangleGen(sX,sY+variY,"black","lightblue",true,0,0);
 
-    draggableShapes.children.forEach(function(e){
+//generating drag Shapes:
+function generateDragShapes() {
+
+    let sX = windowWidth * 0.65;
+    let sY = drawHeight / 8;
+    let variX = windowWidth * 0.20;
+    let variY = drawHeight * 0.30;
+    TriangleGen(sX, sY, "black", "lightblue", true, 0, 0);
+    TriangleGen(sX + variX, sY, "black", "lightblue", true, 0, 0);
+    TriangleGen(sX + variX, sY + variY, "black", "lightblue", true, 0, 0);
+    TriangleGen(sX, sY + variY, "black", "lightblue", true, 0, 0);
+    draggableShapes.children.forEach(function (e) {
         e.rotate(180);
     })
-    rectGeN(sX+variX-((A+B)/4),sY+variY+A,"black","lightblue",true,A,A);
-    rectGeN(sX-((A+B)/4),sY+variY+A,"black","lightblue",true,B,B);
+
+    switch (lvl) {
+        case 1:
+            rectGeN(sX + variX - ((A + B) / 4), sY + variY + A, "black", "lightblue", true, A, A);
+            rectGeN(sX - ((A + B) / 4), sY + variY + A, "black", "lightblue", true, B, B);
+            break;
+        case 2:
+            let w = Math.sqrt(((A * A) + (B * B)));
+            rectGeN(sX + variX * 0.5, sY + variY * 1.5, "black", "lightblue", true, w, w);
+            draggableShapes.children.forEach(function (e) {
+                if (e.getAttr("id") === "square")
+                {
+                    let angle;
+                    if(A>B){
+                        angle = Math.tanh(B/A) * 180/Math.PI;
+                        e.rotate(angle);
+
+                    } else {
+                        angle = Math.tanh(A/B) * 180/Math.PI;
+                        e.rotate(-angle);
+
+                    }
+                }
+            })
+            break;
+    }
+
 }
+
 generateDragShapes();
 movable.add(draggableShapes);
 stationary.add(shapes);
@@ -177,71 +206,135 @@ stage.add(stationary);
 movable.on("dblclick",(e)=>{
     if(e.target.getAttr("id") !== "square"){
         e.target.rotate(90);
+    }else if(e.target.getAttr("id") === "square" && lvl === 2){
+        e.target.rotate(45)
     }
+
     if(e.target.getAttr('rotation') === 360)
     {
         e.target.setAttr('rotation', 0);
     }
 })
 
-movable.on("click", e => {
-    console.log(e.target.getAttr('id'));
-})
 
+function drawTemplate(templateX, templateY) {
+    let outlineSquare;
+    let squareBig;
+    switch (lvl) {
+        case 1:
+            TriangleGen(templateX, templateY, "black", "white", false, 270, 1)
+            TriangleGen(templateX, templateY, "black", "white", false, 90, 1)
+            TriangleGen(templateX + (B / 2) + (A / 2), templateY + (A / 2) + (B / 2), "black", "white", false, 0, 1)
+            TriangleGen(templateX + (B / 2) + (A / 2), templateY + (A / 2) + (B / 2), "black", "white", false, 180, 1)
+            outlineSquare = new Konva.Rect({
+                x: templateX - B / 2,
+                y: templateY - A / 2,
+                width: A + B,
+                height: A + B,
+                opacity: 1,
+                stroke: "black",
+                id: 'square',
+                strokeWidth: 1,
+            })
+            squareBig = new Konva.Rect({
+                x: templateX - (B / 2),
+                y: templateY + (A / 2),
+                width: B,
+                height: B,
+                fill: 'white',
+                stroke: 'black',
+                id: 'square',
+                strokeWidth: 1,
+                draggable: false,
+                name: '0',
+                opacity: 0,
+            });
+            let squareSmall = new Konva.Rect({
+                x: templateX + (B / 2),
+                y: templateY - (A / 2),
+                width: A,
+                height: A,
+                fill: 'white',
+                stroke: 'black',
+                id: 'square',
+                strokeWidth: 1,
+                draggable: false,
+                name: '0',
+                opacity: 0,
+            });
+            shapes.add(squareBig);
+            shapes.add(squareSmall);
+            shapes.add(outlineSquare);
+            staticShapes.push(squareSmall);
+            staticShapes.push(squareBig);
+            break;
+        // ADDED NEW TEMPLATE GENERATOR
+        case 2:
+            let C = Math.sqrt(((A * A) + (B * B)));
+            let angle;
+            if(A<B){
+                 angle = Math.tanh(A/ B);
+            } else {
+                 angle = Math.tanh(B/A)
+            }
 
-shapes.on("click", e => {
-    console.log(e.target.getAttr('id'));
-})
+            angle = angle * (180/Math.PI);
 
-function drawTemplate(templateX,templateY) {
-    TriangleGen(templateX, templateY, "black", "white", false,270, 1)
-    TriangleGen(templateX, templateY, "black", "white", false,90,  1)
-    TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "white", false,0,  1)
-    TriangleGen(templateX + (B/2) + (A/2), templateY + (A/2) + (B/2), "black", "white", false,180,  1)
-    let outlineSquare = new Konva.Rect({
-        x:templateX - B/2,
-        y:templateY - A/2,
-        width:A+B,
-        height:A+B,
-        opacity:1,
-        stroke:"black",
-        id: 'square',
-        strokeWidth:1,
-    })
-    let squareBig = new Konva.Rect({
-        x: templateX - (B/2),
-        y: templateY + (A/2),
-        width: B,
-        height: B,
-        fill: 'white',
-        stroke: 'black',
-        id: 'square',
-        strokeWidth: 1,
-        draggable: false,
-        name:'0',
-        opacity:0,
-    });
-    let squareSmall = new Konva.Rect({
-        x: templateX + (B/2),
-        y: templateY - (A/2),
-        width: A,
-        height: A,
-        fill: 'white',
-        stroke: 'black',
-        id: 'square',
-        strokeWidth: 1,
-        draggable: false,
-        name:'0',
-        opacity:0,
-    });
-    shapes.add(squareBig)
-    shapes.add(squareSmall)
-    shapes.add(outlineSquare)
-    staticShapes.push(squareSmall)
-    staticShapes.push(squareBig)
+            TriangleGen(templateX, templateY, "black", "white", false, 270, 1);
+            TriangleGen(templateX + (B/2) + (A/2), templateY + (B / 2) - (A / 2), "black", "white", false, 0, 1);
+            TriangleGen(templateX - (B/2) + (A/2), templateY + (B / 2) + (A / 2), "black", "white", false, 180, 1);
+            TriangleGen(templateX + A, templateY + B, "black", "white", false, 90, 1);
+            outlineSquare = new Konva.Rect({
+                x: templateX - B / 2,
+                y: templateY - A / 2,
+                width: A + B,
+                height: A + B,
+                opacity: 1,
+                stroke: "black",
+                id: 'square',
+                strokeWidth: 1,
+            })
+            if(A>B){
+                squareBig = new Konva.Rect({
+                    x: templateX + B / 2,
+                    y: templateY-A/2 ,
+                    width: C,
+                    height: C,
+                    fill: 'white',
+                    stroke: 'black',
+                    id: 'square',
+                    strokeWidth: 1,
+                    draggable: false,
+                    name: '0',
+                    opacity: 1,
+                });
+            } else {
+                squareBig = new Konva.Rect({
+                    x: templateX -B/2 ,
+                    y: templateY + A / 2,
+                    width: C,
+                    height: C,
+                    fill: 'white',
+                    stroke: 'black',
+                    id: 'square',
+                    strokeWidth: 1,
+                    draggable: false,
+                    name: '0',
+                    opacity: 1,
+                });
+            }
+            shapes.add(outlineSquare);
+            shapes.add(squareBig);
+            if(A<B){
+                squareBig.rotate(-angle);
+            } else {
+                squareBig.rotate(angle);
+            }
+            staticShapes.push(squareBig);
+            break;
+    }
 }
-
-drawTemplate(windowWidth/4,drawHeight/2-((A+B)/2)-20)
+drawTemplate(windowWidth / 4, drawHeight / 2 - ((A + B) / 2) - 20)
 
 movable.zIndex(1);
 stationary.zIndex(0);
@@ -314,21 +407,19 @@ stage.on('dragmove', function (evt) {
         previousShape = undefined;
     }
 
-    staticShapes.forEach(e =>{
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') === 'square' && activeDrag.getAttr('id') === 'square' && ((e.getAttr('width') === activeDrag.getAttr('width'))))
-        {
+    staticShapes.forEach(e => {
+        if ((e.getX() + 50 >= activeDrag.getX() && e.getX() - 50 <= activeDrag.getX()) && (e.getY() + 50 >= activeDrag.getY() && e.getY() - 50 <= activeDrag.getY()) && e.getAttr('id') === 'square' && activeDrag.getAttr('id') === 'square' && ((e.getAttr('width') === activeDrag.getAttr('width')))) {
             e.opacity(1);
         }
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && activeDrag.getAttr('id') != 'square')
-        {
+        if ((e.getX() + 50 >= activeDrag.getX() && e.getX() - 50 <= activeDrag.getX()) && (e.getY() + 50 >= activeDrag.getY() && e.getY() - 50 <= activeDrag.getY()) && e.getAttr('id') === activeDrag.getAttr('rotation') && activeDrag.getAttr('id') !== 'square') {
             e.opacity(1);
         }
     })
 
 });
 stage.on('dragend', function (e) {
+
     let TriCount = 0;
-    let SqCount = 0;
     var pos = stage.getPointerPosition();
     var shape = movable.getIntersection(pos);
     if (shape) {
@@ -344,44 +435,38 @@ stage.on('dragend', function (e) {
     previousShape = undefined;
     e.target.moveTo(movable);
 
-    staticShapes.forEach(e =>{
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && e.getAttr('name') == '0')
-        {
-            if(activeDrag.getAttr('rotation') === 0)
-            {
+    staticShapes.forEach(e => {
+        if ((e.getX() + 100 >= activeDrag.getX() && e.getX() - 100 <= activeDrag.getX()) && (e.getY() + 100 >= activeDrag.getY() && e.getY() - 100 <= activeDrag.getY()) && e.getAttr('id') == activeDrag.getAttr('rotation') && e.getAttr('name') == '0') {
+            if (activeDrag.getAttr('rotation') === 0) {
                 activeDrag.setAttr('x', e.getX());
-                activeDrag.setAttr('y', e.getY() - (B-A)/2);
+                activeDrag.setAttr('y', e.getY() - (B - A) / 2);
                 activeDrag.setAttr('draggable', false);
                 e.setAttr('name', '1');
                 activeDrag.moveTo(stationary)
             }
-            if(activeDrag.getAttr('rotation') === 90)
-            {
-                activeDrag.setAttr('x', e.getX() + (B-A)/2);
+            if (activeDrag.getAttr('rotation') === 90) {
+                activeDrag.setAttr('x', e.getX() + (B - A) / 2);
                 activeDrag.setAttr('y', e.getY());
                 activeDrag.setAttr('draggable', false);
                 e.setAttr('name', '1');
                 activeDrag.moveTo(stationary);
             }
-            if(activeDrag.getAttr('rotation') === 180)
-            {
+            if (activeDrag.getAttr('rotation') === 180) {
                 activeDrag.setAttr('x', e.getX());
-                activeDrag.setAttr('y', e.getY() + (B-A)/2);
+                activeDrag.setAttr('y', e.getY() + (B - A) / 2);
                 activeDrag.setAttr('draggable', false);
                 e.setAttr('name', '1');
                 activeDrag.moveTo(stationary)
             }
-            if(activeDrag.getAttr('rotation') === 270)
-            {
-                activeDrag.setAttr('x', e.getX() - (B-A)/2);
+            if (activeDrag.getAttr('rotation') === 270) {
+                activeDrag.setAttr('x', e.getX() - (B - A) / 2);
                 activeDrag.setAttr('y', e.getY());
                 activeDrag.setAttr('draggable', false);
                 e.setAttr('name', '1');
                 activeDrag.moveTo(stationary)
             }
         }
-        if((e.getX()+50 >= activeDrag.getX() && e.getX()-50 <= activeDrag.getX()) && (e.getY()+50 >= activeDrag.getY() && e.getY()-50 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))) && e.getAttr('name') == '0')
-        {
+        if ((e.getX() + 100 >= activeDrag.getX() && e.getX() - 100 <= activeDrag.getX()) && (e.getY() + 100 >= activeDrag.getY() && e.getY() - 100 <= activeDrag.getY()) && e.getAttr('id') == 'square' && activeDrag.getAttr('id') == 'square' && ((e.getAttr('width') == activeDrag.getAttr('width'))) && e.getAttr('name') == '0') {
             activeDrag.setAttr('x', e.getX());
             activeDrag.setAttr('y', e.getY());
             activeDrag.setAttr('draggable', false)
@@ -392,7 +477,7 @@ stage.on('dragend', function (e) {
     stationary.children.forEach((e) => {
         if (e.getAttr("id") === "triangle") {
             TriCount++;
-            console.log(TriCount )
+            console.log(TriCount)
         }
 
         if (TriCount === 4) {
@@ -400,63 +485,66 @@ stage.on('dragend', function (e) {
         }
 
     });
-   if(draggableShapes.children.length === 0){
-       interactionSteps(3);
-
-   }
-
-
+    if (draggableShapes.children.length === 0) {
+        interactionSteps(3);
+    }
 });
 
 draggableShapes.children.forEach((e) => {
-    e.dragBoundFunc(function(pos){
-        return{
-            x:Math.max(pos.x,0),
-            y:Math.max(pos.y,132/2)
+    e.dragBoundFunc(function (pos) {
+        return {
+            x: Math.max(pos.x, 0),
+            y: Math.max(pos.y, 132 / 2)
         }
     })
 
-   /* e.target.y(Math.max(e.target.getY(), 100))
-    e.target.x(Math.max(e.target.getX(), 20));
-    e.target.x(Math.min(e.target.getX(), windowWidth-50));
-    e.target.y(Math.min(e.target.getY(),drawHeight-200));*/
+    /* e.target.y(Math.max(e.target.getY(), 100))
+     e.target.x(Math.max(e.target.getX(), 20));
+     e.target.x(Math.min(e.target.getX(), windowWidth-50));
+     e.target.y(Math.min(e.target.getY(),drawHeight-200));*/
 });
 
 let nxtButt = document.getElementById("nextButt");
 nxtButt.style.display = "none";
+
 //steps function:
-function interactionSteps(step){
+function interactionSteps(step) {
     let txt = document.getElementById("textContainer");
-    draggableShapes.children.forEach((e)=>{
-        if(e.getAttr("id") === "square" && step === 1){
-            e.setAttr("draggable",false);
-        } else if(step === 2){
-            e.setAttr("draggable",true);
+    draggableShapes.children.forEach((e) => {
+        if (e.getAttr("id") === "square" && step === 1) {
+            e.setAttr("draggable", false);
+        } else if (step === 2) {
+            e.setAttr("draggable", true);
         }
     })
-    switch(step){
-        case 1:
-            txt.innerHTML = "Step 1: Triangles";
-            break;
-        case 2:
-            txt.innerText = "Step 2: Rectangles";
-            break;
-        case 3:
-            txt.innerText = "Explaining Explaining ...";
-            nxtButt.style.display = "block";
-            break;
+    if (lvl === 1) {
+        switch (step) {
+            case 1:
+                txt.innerHTML = "Step 1: Triangles";
+                break;
+            case 2:
+                txt.innerText = "Step 2: Rectangles";
+                break;
+            case 3:
+                txt.innerText = "Explaining Explaining ...";
+                nxtButt.style.display = "block";
+                break;
+        }
+    } else if(lvl === 2){
+        switch (step) {
+            case 1:
+                txt.innerHTML = "Step 1: Triangles";
+                break;
+            case 2:
+                txt.innerText = "Step 2: Center Rectangle";
+                break;
+            case 3:
+                txt.innerText = "Explaining Explaining ...";
+                nxtButt.style.display = "block";
+                break;
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 //maths Functions to find Circumcenter:
@@ -464,7 +552,7 @@ function line(P, Q) {
     let a = Q[1] - P[1];
     let b = P[0] - Q[0];
     let c = a * (P[0]) + b * (P[1]);
-    return [a,b,c];
+    return [a, b, c];
 }
 
 function PBisect(P, Q, a, b, c) {
