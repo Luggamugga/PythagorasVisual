@@ -172,12 +172,12 @@ function generateDragShapes() {
 
     switch (lvl) {
         case 1:
-            rectGeN(sX + variX - ((A + B) / 4), sY + variY + A, "black", "lightblue", true, A, A);
-            rectGeN(sX - ((A + B) / 4), sY + variY + A, "black", "lightblue", true, B, B);
+            rectGeN(sX + variX - ((A + B) / 4), sY + variY + A, "black", "#89a1c4", true, A, A);
+            rectGeN(sX - ((A + B) / 4), sY + variY + A, "black", "#2d4260", true, B, B);
             break;
         case 2:
             let w = Math.sqrt(((A * A) + (B * B)));
-            rectGeN(sX, sY + variY * 1.6, "black", "lightblue", true, w, w);
+            rectGeN(sX, sY + variY * 1.6, "black", "#89a1c4", true, w, w);
             draggableShapes.children.forEach(function (e) {
                 if (e.getAttr("id") === "square") {
                     let angle;
@@ -205,31 +205,8 @@ movable.add(draggableShapes);
 stationary.add(shapes);
 stage.add(movable);
 stage.add(stationary);
-/*
-let dragGroup = new Konva.Group({
-    draggable:true,
-    x:500,
-    y:500,
-});
-let testRect = new Konva.Rect({
-
-    width:100,
-    height:100,
-    stroke:"black",
-    strokeWidth:1,
-    fill:"white"
-})
-let testTxt = new Konva.Text({
-    text:"label",
-    fontFamily: 'Calibri',
-    fontSize: 18,
-    padding: 5,
-    fill: 'black',
-})
-dragGroup.add(testRect).add(testTxt);
-movable.add(dragGroup);
-*/
-//limiting drag area:
+let C = Math.sqrt(((A * A) + (B * B)));
+document.getElementById("triSidelengths").innerHTML =  "A:"+A.toString()+" B:"+ B.toString() + "C(hypotenuse): "+Math.round(C).toString();
 
 //rotation on dblclick:
 movable.on("dblclick", (e) => {
@@ -298,7 +275,6 @@ function drawTemplate(templateX, templateY) {
             break;
         // ADDED NEW TEMPLATE GENERATOR
         case 2:
-            let C = Math.sqrt(((A * A) + (B * B)));
             let angle;
             if (A < B) {
                 angle = Math.tanh(A / B);

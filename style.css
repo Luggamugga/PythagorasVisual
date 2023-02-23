@@ -78,13 +78,35 @@ text-align:justify;
 #textBox{
     border: solid 1px black;
     margin: 10px auto 0;
-    width: 60%;
+    width: 55%;
     height: 130px;
     background-color: antiquewhite;
     font-size:20px;
 }
 #nextButtContainer{
-    right: 21%;
+    right: 23%;
     position: absolute;
     top: 112px;
+}
+#nextButtContainer a{
+    text-decoration: none;
+}
+#hintButtContainer{
+    left:23%;
+    position:absolute;
+    top:112px;
+}
+
+#keyContainer{
+    display: flex;
+    position: absolute;
+}
+#bigtxtBox{
+    width:60%;
+    background-color:antiquewhite;
+    font-family: "Verdana", serif;
+    font-size: 20px;
+    margin:20px auto 0;
+    padding:10px;
+    border:2px solid black;
 }
