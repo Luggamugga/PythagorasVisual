@@ -45,7 +45,7 @@ let radius = (A*B*C)/(4*Math.sqrt(s*(s-A)*(s-B)*(s-C)))
 //current active shape
 let activeDrag;
 
-function   rectGeN(startX, startY, stroke, fill, draggable, w, h) {
+function rectGeN(startX, startY, stroke, fill, draggable, w, h) {
     let newRect = new Konva.Rect({
         width: w,
         height: h,
@@ -60,7 +60,7 @@ function   rectGeN(startX, startY, stroke, fill, draggable, w, h) {
     draggableShapes.add(newRect)
 }
 
-function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
+function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code, label) {
     if (code === 0) {
         if (rotation === 0) {
             let P = [startX, startY];
@@ -75,6 +75,8 @@ function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
                     context.lineTo(startX + A, startY + B);
                     context.closePath();
                     context.fillStrokeShape(shape);
+                    context.fillText(shape)
+
                 },
                 fill: fill,
                 stroke: stroke,
@@ -88,6 +90,8 @@ function TriangleGen(startX, startY, stroke, fill, draggable, rotation, code) {
                     y: arr[1]
                 }
             });
+
+
             //layer.add(newTri);
             draggableShapes.add(newTri);
         }
@@ -158,10 +162,10 @@ function generateDragShapes() {
     let sY = drawHeight / 8;
     let variX = windowWidth * 0.20;
     let variY = drawHeight * 0.30;
-    TriangleGen(sX, sY, "black", "lightblue", true, 0, 0);
-    TriangleGen(sX + variX, sY, "black", "lightblue", true, 0, 0);
-    TriangleGen(sX + variX, sY + variY, "black", "lightblue", true, 0, 0);
-    TriangleGen(sX, sY + variY, "black", "lightblue", true, 0, 0);
+    TriangleGen(sX, sY, "black", "lightblue", true, 0, 0, "asdf");
+    TriangleGen(sX + variX, sY, "black", "lightblue", true, 0, 0, "");
+    TriangleGen(sX + variX, sY + variY, "black", "lightblue", true, 0, 0, "");
+    TriangleGen(sX, sY + variY, "black", "lightblue", true, 0, 0, "");
     draggableShapes.children.forEach(function (e) {
         e.rotate(180);
     })
@@ -173,18 +177,20 @@ function generateDragShapes() {
             break;
         case 2:
             let w = Math.sqrt(((A * A) + (B * B)));
-            rectGeN(sX + variX * 0.5, sY + variY * 1.5, "black", "lightblue", true, w, w);
+            rectGeN(sX, sY + variY * 1.6, "black", "lightblue", true, w, w);
             draggableShapes.children.forEach(function (e) {
-                if (e.getAttr("id") === "square")
-                {
+                if (e.getAttr("id") === "square") {
                     let angle;
-                    if(A>B){
-                        angle = Math.tanh(B/A) * 180/Math.PI;
+                    if (A > B) {
+                        angle = Math.tanh(B / A) * 180 / Math.PI;
                         e.rotate(angle);
-
+                        e.y(e.getY()-80)
+                        e.x(e.getX()+80)
                     } else {
-                        angle = Math.tanh(A/B) * 180/Math.PI;
+                        angle = Math.tanh(A / B) * 180 / Math.PI;
                         e.rotate(-angle);
+                        e.y(e.getY()+80)
+                        e.x(e.getX()-80)
 
                     }
                 }
@@ -199,19 +205,41 @@ movable.add(draggableShapes);
 stationary.add(shapes);
 stage.add(movable);
 stage.add(stationary);
+/*
+let dragGroup = new Konva.Group({
+    draggable:true,
+    x:500,
+    y:500,
+});
+let testRect = new Konva.Rect({
 
+    width:100,
+    height:100,
+    stroke:"black",
+    strokeWidth:1,
+    fill:"white"
+})
+let testTxt = new Konva.Text({
+    text:"label",
+    fontFamily: 'Calibri',
+    fontSize: 18,
+    padding: 5,
+    fill: 'black',
+})
+dragGroup.add(testRect).add(testTxt);
+movable.add(dragGroup);
+*/
 //limiting drag area:
 
 //rotation on dblclick:
-movable.on("dblclick",(e)=>{
-    if(e.target.getAttr("id") !== "square"){
+movable.on("dblclick", (e) => {
+    if (e.target.getAttr("id") !== "square") {
         e.target.rotate(90);
-    }else if(e.target.getAttr("id") === "square" && lvl === 2){
+    } else if (e.target.getAttr("id") === "square" && lvl === 2) {
         e.target.rotate(45)
     }
 
-    if(e.target.getAttr('rotation') === 360)
-    {
+    if (e.target.getAttr('rotation') === 360) {
         e.target.setAttr('rotation', 0);
     }
 })
@@ -272,17 +300,17 @@ function drawTemplate(templateX, templateY) {
         case 2:
             let C = Math.sqrt(((A * A) + (B * B)));
             let angle;
-            if(A<B){
-                 angle = Math.tanh(A/ B);
+            if (A < B) {
+                angle = Math.tanh(A / B);
             } else {
-                 angle = Math.tanh(B/A)
+                angle = Math.tanh(B / A)
             }
 
-            angle = angle * (180/Math.PI);
+            angle = angle * (180 / Math.PI);
 
             TriangleGen(templateX, templateY, "black", "white", false, 270, 1);
-            TriangleGen(templateX + (B/2) + (A/2), templateY + (B / 2) - (A / 2), "black", "white", false, 0, 1);
-            TriangleGen(templateX - (B/2) + (A/2), templateY + (B / 2) + (A / 2), "black", "white", false, 180, 1);
+            TriangleGen(templateX + (B / 2) + (A / 2), templateY + (B / 2) - (A / 2), "black", "white", false, 0, 1);
+            TriangleGen(templateX - (B / 2) + (A / 2), templateY + (B / 2) + (A / 2), "black", "white", false, 180, 1);
             TriangleGen(templateX + A, templateY + B, "black", "white", false, 90, 1);
             outlineSquare = new Konva.Rect({
                 x: templateX - B / 2,
@@ -294,10 +322,10 @@ function drawTemplate(templateX, templateY) {
                 id: 'square',
                 strokeWidth: 1,
             })
-            if(A>B){
+            if (A > B) {
                 squareBig = new Konva.Rect({
                     x: templateX + B / 2,
-                    y: templateY-A/2 ,
+                    y: templateY - A / 2,
                     width: C,
                     height: C,
                     fill: 'white',
@@ -306,11 +334,11 @@ function drawTemplate(templateX, templateY) {
                     strokeWidth: 1,
                     draggable: false,
                     name: '0',
-                    opacity: 1,
+                    opacity: 0,
                 });
             } else {
                 squareBig = new Konva.Rect({
-                    x: templateX -B/2 ,
+                    x: templateX - B / 2,
                     y: templateY + A / 2,
                     width: C,
                     height: C,
@@ -320,12 +348,12 @@ function drawTemplate(templateX, templateY) {
                     strokeWidth: 1,
                     draggable: false,
                     name: '0',
-                    opacity: 1,
+                    opacity: 0,
                 });
             }
             shapes.add(outlineSquare);
             shapes.add(squareBig);
-            if(A<B){
+            if (A < B) {
                 squareBig.rotate(-angle);
             } else {
                 squareBig.rotate(angle);
@@ -334,10 +362,12 @@ function drawTemplate(templateX, templateY) {
             break;
     }
 }
+
 drawTemplate(windowWidth / 4, drawHeight / 2 - ((A + B) / 2) - 20)
 
 movable.zIndex(1);
 stationary.zIndex(0);
+
 
 //setting the opacity of all shapes to 0:
 /*for(i in staticShapes){
@@ -507,6 +537,22 @@ draggableShapes.children.forEach((e) => {
 let nxtButt = document.getElementById("nextButt");
 nxtButt.style.display = "none";
 
+
+document.getElementById("hint").addEventListener("click", function getHint() {
+    let rand;
+        if (lvl === 1) {
+            rand = Math.floor(Math.random() * 5);
+        } else {
+            rand = Math.floor(Math.random() * 4);
+        }
+        staticShapes[rand].setAttr("opacity", "1");
+        setTimeout(function(){
+            staticShapes.forEach(e => e.setAttr("opacity", "0"));
+        },1000)
+
+})
+
+
 //steps function:
 function interactionSteps(step) {
     let txt = document.getElementById("textContainer");
@@ -530,7 +576,7 @@ function interactionSteps(step) {
                 nxtButt.style.display = "block";
                 break;
         }
-    } else if(lvl === 2){
+    } else if (lvl === 2) {
         switch (step) {
             case 1:
                 txt.innerHTML = "Step 1: Triangles";

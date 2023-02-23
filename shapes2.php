@@ -7,7 +7,7 @@
 </head>
 <body>
 <div id="textBox"><div id="textContainer">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet</div>
-    <div id="nextButtContainer"><button type="button" id="nextButt"><a href="">Next Level</a></button></div>
+    <div id="hintButtContainer"><button id="hint">Get Hint</button></div><div id="nextButtContainer"><button type="button" id="nextButt"><a href="">Next Level</a></button></div>
 
 </div>
 
