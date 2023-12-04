@@ -590,7 +590,7 @@ function PBisect(P, Q, a, b, c) {
 
 function linelineIntersect(a1, b1, c1, a2, b2, c2) {
     let determinant = a1 * b2 - a2 * b1;
-    if (determinant == 0) {
+    if (determinant === 0) {
 
         return [(10.0) ** 19, (10.0) ** 19];
     } else {
